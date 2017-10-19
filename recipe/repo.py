@@ -1,5 +1,7 @@
 """
 Repository for recipe values
+
+TODO: switch to mtime. Directory atimes prone to caching peculiarities. 
 """
 import os
 from hashlib import sha256

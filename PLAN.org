@@ -1,0 +1,18 @@
+* Setup info
+
+** Emacs
+
+M-0 C-c C-p to specify interpeter (/home/user/p/casa-release-5.1.0-74.el7/bin/python -i)
+
+** CASA 5.1  : pure python mode
+
+
+[[file:~/p/casa-release-5.1.0-74.el7/lib/python2.7/taskinit.py::"xml":%20"/home/user/p/casa-release-5.1.0-74.el7/xml/"}][file:~/p/casa-release-5.1.0-74.el7/lib/python2.7/taskinit.py::"xml": "/home/user/p/casa-release-5.1.0-74.el7/xml/"}]]   
+
+add 
+#+BEGIN_SRC 
+if not casa:
+    casa={}
+    casa['dirs']={"data": "/home/user/p/casa-release-5.1.0-74.el7/data/",
+                  "xml":  "/home/user/p/casa-release-5.1.0-74.el7/xml/"}
+#+END_SRC
