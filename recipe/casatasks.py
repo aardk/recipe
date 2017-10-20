@@ -19,14 +19,18 @@ import casa
 
 import repo
 
+TRACE=True
+
 # Decos
 def ccheck(fn):
     def newfn(*args, **kwargs):
         hh=hf(getattr(casa, fn.__name__), *args, **kwargs)
         mm=repo.get(hh)
         if mm:
+            if TRACE : print "TRACE: Using cached value of:", fn.__name__, args, kwargs
             return mm
         else:
+            if TRACE : print "TRACE: Calculating value of:", fn.__name__, args, kwargs
             tempf=fn(*args,  **kwargs)
             return repo.put(tempf, hh)    
     return newfn
