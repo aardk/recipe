@@ -16,3 +16,7 @@ if not casa:
     casa['dirs']={"data": "/home/user/p/casa-release-5.1.0-74.el7/data/",
                   "xml":  "/home/user/p/casa-release-5.1.0-74.el7/xml/"}
 #+END_SRC
+
+* Working with
+
+Testing data in /home/user/temp/casa/
