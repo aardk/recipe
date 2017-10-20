@@ -53,7 +53,23 @@ def h_simpo(fn, args, kwargs):
     os.remove(f)
     aa[opar]=f
     fn(**aa)
-    return f    
+    return f
+
+def h_inplc(fn, args, kwargs):
+    """A task that in-place modifies an input
+
+    """
+    opars= {"flagdata" : "vis"}
+    iopar=opars[fn.__name__]
+
+    aa=inspect.getcallargs(fn, *args, **kwargs)
+    f=repo.mktemp()
+    os.remove(f)
+    shutil.copytree(aa[iopar], f)
+    aa[iopar]=f
+    fn(**aa)
+    return f
+
 
 # Main part
 
@@ -96,7 +112,9 @@ def split(*args, **kwargs):
 def importuvfits(*args, **kwargs):
     return h_simpo(casa.importuvfits, args, kwargs)
 
-    
+@ccheck
+def flagdata(*args, **kwargs):
+    return h_inplc(casa.flagdata, args, kwargs)
 
 
 
