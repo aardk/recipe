@@ -30,5 +30,20 @@ def ft(*args, **kwargs):
     os.remove(f)
     shutil.copytree(aa['vis'], f)
     aa['vis']=f
-    casa.ft(*args, **kwargs)
+    casa.ft(**aa)
     return repo.put(f, hh)
+
+def gaincal(*args, **kwargs):
+    hh=hf(casa.gaincal, *args, **kwargs)
+    mm=repo.get(hh)
+    if mm:
+        return mm
+
+    aa=inspect.getcallargs(casa.gaincal, *args, **kwargs)
+    if aa.has_key("caltable"):
+        print "Warning: can not supply the output; will be ignored"
+    f=repo.mktemp()
+    os.remove(f)
+    aa['caltable']=f
+    casa.gaincal(**aa)
+    return repo.put(f, hh)    
