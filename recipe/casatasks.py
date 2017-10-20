@@ -38,19 +38,15 @@ def clean(*args, **kwargs):
 def split(*args, **kwargs):
     return hf(casa.split, b*args, **kwargs)
 
+@ccheck
 def ft(*args, **kwargs):
-    hh=hf(casa.ft, *args, **kwargs)
-    mm=repo.get(hh)
-    if mm:
-        return mm
-
     aa=inspect.getcallargs(casa.ft, *args, **kwargs)
     f=repo.mktemp()
     os.remove(f)
     shutil.copytree(aa['vis'], f)
     aa['vis']=f
     casa.ft(**aa)
-    return repo.put(f, hh)
+    return f
 
 @ccheck
 def gaincal(*args, **kwargs):
@@ -62,3 +58,28 @@ def gaincal(*args, **kwargs):
     aa['caltable']=f
     casa.gaincal(**aa)
     return f
+
+@ccheck
+def applycal(*args, **kwargs):
+    aa=inspect.getcallargs(casa.applycal, *args, **kwargs)
+    f=repo.mktemp()
+    os.remove(f)
+    shutil.copytree(aa['vis'], f)
+    aa['vis']=f
+    casa.applycal(**aa)
+    return f
+
+@ccheck
+def split(*args, **kwargs):
+    aa=inspect.getcallargs(casa.split, *args, **kwargs)
+    if aa.has_key("outputvis") and aa["outputvis"] != "" :
+        print "Warning: can not supply the output; will be ignored"
+    f=repo.mktemp()
+    os.remove(f)
+    aa['outputvis']=f
+    casa.split(**aa)
+    return f
+    
+
+
+
