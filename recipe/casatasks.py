@@ -1,3 +1,4 @@
+# Bojan Nikolic <b.nikolic@mrao.cam.ac.uk> 2017
 """
 Hand-wrapped tasks for CASA
 
@@ -5,6 +6,10 @@ What we need to do here:
   - For tasks that modify their input, copy them first
   - For tasks with multiple outputs, put them all in a directory
   - For tasks that pickup files from cwd, make sure they don't
+
+Qs:
+  - What are the flagversions?
+
 """
 
 import inspect, shutil, os
@@ -26,6 +31,26 @@ def ccheck(fn):
             return repo.put(tempf, hh)    
     return newfn
 
+# Handlers
+def h_simpo(fn, args, kwargs):
+    """Simple output task 
+    
+    All output goes into a single file/dir that is specified
+    """
+    opars= {"split" : "outputvis",
+            "gaincal" : "caltable",
+            "importuvfits": "vis"}
+    opar=opars[fn.__name__]
+
+    aa=inspect.getcallargs(fn, *args, **kwargs)
+    if aa.has_key(opar) and aa[opar] != "" :
+        print "Warning: can not supply the output; will be ignored"
+    f=repo.mktemp()
+    os.remove(f)
+    aa[opar]=f
+    fn(**aa)
+    return f    
+
 # Main part
 
 def hf(fn, *args, **kwargs):
@@ -34,9 +59,6 @@ def hf(fn, *args, **kwargs):
 
 def clean(*args, **kwargs):
     return hf(casa.clean, *args, **kwargs)
-
-def split(*args, **kwargs):
-    return hf(casa.split, b*args, **kwargs)
 
 @ccheck
 def ft(*args, **kwargs):
@@ -50,14 +72,7 @@ def ft(*args, **kwargs):
 
 @ccheck
 def gaincal(*args, **kwargs):
-    aa=inspect.getcallargs(casa.gaincal, *args, **kwargs)
-    if aa.has_key("caltable") and aa["caltable"] != "" :
-        print "Warning: can not supply the output; will be ignored"
-    f=repo.mktemp()
-    os.remove(f)
-    aa['caltable']=f
-    casa.gaincal(**aa)
-    return f
+    return h_simpo(casa.gaincal, args, kwargs)    
 
 @ccheck
 def applycal(*args, **kwargs):
@@ -71,14 +86,12 @@ def applycal(*args, **kwargs):
 
 @ccheck
 def split(*args, **kwargs):
-    aa=inspect.getcallargs(casa.split, *args, **kwargs)
-    if aa.has_key("outputvis") and aa["outputvis"] != "" :
-        print "Warning: can not supply the output; will be ignored"
-    f=repo.mktemp()
-    os.remove(f)
-    aa['outputvis']=f
-    casa.split(**aa)
-    return f
+    return h_simpo(casa.split, args, kwargs)
+
+@ccheck
+def importuvfits(*args, **kwargs):
+    return h_simpo(casa.importuvfits, args, kwargs)
+
     
 
 

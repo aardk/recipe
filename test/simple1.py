@@ -1,6 +1,8 @@
 
-invis="/home/user/temp/casa/inputs/zen.2457546.48011.xx.HH.uvcU.ms"
+infits="/home/user/temp/casa/inputs/zen.2457546.48011.xx.HH.uvcU.fits"
 ingc="/home/user/temp/casa/inputs/GC.cl"
+
+invis=importuvfits(infits)
 
 f1=ft(invis, complist=ingc, usescratch=True)
 
