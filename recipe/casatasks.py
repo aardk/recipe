@@ -43,7 +43,8 @@ def h_simpo(fn, args, kwargs):
     """
     opars= {"split" : "outputvis",
             "gaincal" : "caltable",
-            "importuvfits": "vis"}
+            "importuvfits": "vis",
+            "fixvis" : "outputvis"}
     opar=opars[fn.__name__]
 
     aa=inspect.getcallargs(fn, *args, **kwargs)
@@ -108,6 +109,12 @@ def split(*args, **kwargs):
 @ccheck
 def importuvfits(*args, **kwargs):
     return h_simpo(casa.importuvfits, args, kwargs)
+
+@ccheck
+def fixvis(*args, **kwargs):
+    # Note fixvis won't modify input if output is given, so we use it
+    # in that mode
+    return h_simpo(casa.fixvis, args, kwargs)
 
 @ccheck
 def flagdata(*args, **kwargs):

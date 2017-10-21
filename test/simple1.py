@@ -17,6 +17,8 @@ f1= flagdata(f1, flagbackup=True,        mode='manual', spw="0:511")
 f1= flagdata(f1, flagbackup=True,        mode='manual', spw="0:913")                
 f1= flagdata(f1, autocorr=True)
 
+f1= fixvis(f1, phasecenter="J2000 17h45m40s -29d00m28s")
+
 K=gaincal(f1,
           gaintype='K', refant="11")
         
