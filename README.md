@@ -22,6 +22,11 @@ from recipe import casatasks as c
 c.importuvfits(....)
 c.clean(....) 
 
+How to contribute
+-----------------
 
+git clone http://www.mrao.cam.ac.uk/~bn204/g/recipe/
+<work>
+git send-email --to="b.nikolic@mrao.cam.ac.uk"
 
 
