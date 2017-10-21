@@ -2,7 +2,6 @@
 """
 Repository for recipe values
 
-TODO: switch to mtime. Directory atimes prone to caching peculiarities.
 """
 import os
 from hashlib import sha256
@@ -14,6 +13,8 @@ REPODIR="/home/user/temp/casa/repo/"
 
 # Default is 20GB
 EVLIM=20 * (1<<20)
+# Evict really?
+EVICT=False
 
 def atimes(d):
     """
@@ -30,11 +31,8 @@ def atimes(d):
     return res
 
 def atouch(f):
-    if os.path.isdir(f):
-        print "Don't know how to set directory atime"
-        tempfile.TemporaryFile(dir=f).close()
-    else:
-        open(f, "r").close()
+    # Sets to current time
+    os.utime(f, None)
 
 def df(f):
     "Returns number of free blocks"
@@ -48,11 +46,15 @@ def evict_m(d):
         al=atimes(d)
         while(len(al) and df(d)<EVLIM):
             x=al.pop(0)[1]
-            print "Removing" , x
+            if EVICT:
+                pass
+            else:
+                print "TRACE: Pretend-removing  " , x
 
 def get(h):
     p=os.path.join(REPODIR, h)
     if os.path.exists(p):
+        atouch(p)
         return p
     else:
         return False
@@ -68,6 +70,7 @@ def put(d, h):
     :param d: the file to put, it is moved, so won't exist at end of
     operation
     """
+    evict_m(REPODIR)
     p=os.path.join(REPODIR, h)
     if os.path.exists(p):
         pass
