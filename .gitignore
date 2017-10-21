@@ -1,1 +1,4 @@
 /recipe/*.pyc
+/MANIFEST
+dist/
+/recipe/casa.log
