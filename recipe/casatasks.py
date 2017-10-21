@@ -77,9 +77,6 @@ def hf(fn, *args, **kwargs):
     """Hash a function call, including function name """
     return sha256(fn.func_name+str(inspect.getcallargs(fn, *args, **kwargs))).hexdigest()
 
-def clean(*args, **kwargs):
-    return hf(casa.clean, *args, **kwargs)
-
 @ccheck
 def ft(*args, **kwargs):
     aa=inspect.getcallargs(casa.ft, *args, **kwargs)
@@ -116,5 +113,28 @@ def importuvfits(*args, **kwargs):
 def flagdata(*args, **kwargs):
     return h_inplc(casa.flagdata, args, kwargs)
 
+@ccheck
+def clean(*args, **kwargs):
+    """Clean task
+
+    Clean modifies its input (becuase the model column is updated),
+    produces output. Will pick up the clean model if it exists already
+    """
+    iopar="vis"
+    opar="imagename"
+    fn=casa.clean
+    aa=inspect.getcallargs(fn, *args, **kwargs)
+    f=repo.mktemp()
+    os.remove(f)
+    os.mkdir(f)
+    vis=os.path.join(f, "vis")
+    shutil.copytree(aa[iopar],vis)
+    aa[iopar]=vis
+    aa[opar]=os.path.join(f, "img")
+    fn(**aa)
+    return f    
+    
+    
+    
 
 

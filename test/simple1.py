@@ -1,4 +1,4 @@
-
+GCCleanMask='ellipse[[17h45m00.0s,-29d00m00.00s ], [ 11deg, 4deg ] , 30deg]'
 infits="/home/user/temp/casa/inputs/zen.2457546.48011.xx.HH.uvcU.fits"
 ingc="/home/user/temp/casa/inputs/GC.cl"
 
@@ -29,3 +29,16 @@ G=gaincal(f1,
 f2=applycal(f1, gaintable=[K, G])        
 
 f3=split(f2)
+
+oo=clean(vis=f3,
+         niter=500,
+         weighting='briggs',
+         robust=0,
+         imsize=[1024,1024],
+         cell=['250arcsec'],
+         mode='mfs',
+         nterms=1,
+         spw='0:150~900',
+         reffreq='120MHz',
+         #spw='0:150~700',
+         mask=GCCleanMask)
