@@ -30,8 +30,10 @@ def ccheck(fn):
             if TRACE : print "TRACE: Using cached value of:", fn.__name__, args, kwargs
             return mm
         else:
-            if TRACE : print "TRACE: Calculating value of:", fn.__name__, args, kwargs
+            if TRACE : print "TRACE: Calculating value of:", fn.__name__, args, kwargs, " -> ", hh
             tempf=fn(*args,  **kwargs)
+            if not os.path.exists(tempf):
+                raise RuntimeError("No output produced by " + fn.__name__  + "!")
             return repo.put(tempf, hh)    
     return newfn
 
