@@ -21,6 +21,10 @@ import casa
 import repo
 
 TRACE=True
+TRACEV=2
+
+def trc(*args):
+    if TRACE: print((" ").join(args[0:TRACEV]))
 
 # Decos
 def ccheck(fn):
@@ -28,10 +32,10 @@ def ccheck(fn):
         hh=hf(getattr(casa, fn.__name__), *args, **kwargs)
         mm=repo.get(hh)
         if mm:
-            if TRACE : print "TRACE: Using cached value of:", fn.__name__, args, kwargs
+            trc( "[Cached]", fn.__name__, args, kwargs)
             return mm
         else:
-            if TRACE : print "TRACE: Calculating value of:", fn.__name__, args, kwargs, " -> ", hh
+            trc( "[Eval] ", fn.__name__, args, kwargs, " -> ", hh)
             tempf=fn(*args,  **kwargs)
             if not os.path.exists(tempf):
                 raise RuntimeError("No output produced by " + fn.__name__  + "!")
