@@ -4,6 +4,8 @@
 
 M-0 C-c C-p to specify interpeter (/home/user/p/casa-release-5.1.0-74.el7/bin/python -i)
 
+On bnwork: /data/p/casa-release-5.1.0-74.el7/bin/python -i
+
 ** CASA 5.1  : pure python mode
 
 

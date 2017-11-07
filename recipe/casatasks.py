@@ -9,6 +9,7 @@ What we need to do here:
 
 Qs:
   - What are the flagversions?
+  - The FT model in visibility after CLEAN has the absolute coded path???? Can't move MS?
 
 """
 
