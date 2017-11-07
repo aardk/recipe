@@ -3,7 +3,8 @@ RECIPE: Minimal recomputation for radio astronomy
 
 This is version 2 of recipe which focuses on memoization. See the PASP
 article: Nikolic, Small & Kettenis (2017) "Minimal Re-computation for
-Exploratory Data Analysis in Astronomy".
+Exploratory Data Analysis in Astronomy".  Licensed under GPL (like the
+dependency CASA).
 
 How to install
 --------------
@@ -38,5 +39,7 @@ How to contribute
 git clone http://www.mrao.cam.ac.uk/~bn204/g/recipe/
 <work>
 git send-email --to="b.nikolic@mrao.cam.ac.uk"
+
+Or if you prefer GitHub, see: https://github.com/bnikolic/recipe
 
 
