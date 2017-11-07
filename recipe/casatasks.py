@@ -83,7 +83,8 @@ def h_inplc(fn, args, kwargs):
 
 def hf(fn, *args, **kwargs):
     """Hash a function call, including function name """
-    return sha256(fn.func_name+str(inspect.getcallargs(fn, *args, **kwargs))).hexdigest()
+    aa=inspect.getcallargs(fn, *args, **kwargs).items(); aa.sort()
+    return sha256(fn.func_name+repr(aa)).hexdigest()
 
 @ccheck
 def ft(*args, **kwargs):
