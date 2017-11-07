@@ -9,12 +9,13 @@ dependency CASA).
 How to install
 --------------
 
+```
 export CASADIR=/home/user/p/casa-release-5.1.0-74.el7/
 wget https://bootstrap.pypa.io/get-pip.py
 ${CASADIR:? must be set}/bin/python get-pip.py
 ${CASADIR}/bin/pip2.7 install --upgrade setuptools
 ${CASADIR:? must be set}/bin/pip install --extra-index-url=https://www.mrao.cam.ac.uk/~bn204/soft/py recipe
-
+```
 
 
 How to use
@@ -29,16 +30,20 @@ The two main things to remember about how Recipe works:
 2. If a task modified it's input, the modified input will be in the
    output directory
 
+```
 from recipe import casatasks as c
 c.importuvfits(....)
 c.clean(....) 
+```
 
 How to contribute
 -----------------
 
+```
 git clone http://www.mrao.cam.ac.uk/~bn204/g/recipe/
 <work>
 git send-email --to="b.nikolic@mrao.cam.ac.uk"
+```
 
 Or if you prefer GitHub, see: https://github.com/bnikolic/recipe
 
