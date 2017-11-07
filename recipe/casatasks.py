@@ -24,7 +24,7 @@ TRACE=True
 TRACEV=2
 
 def trc(*args):
-    if TRACE: print((" ").join(args[0:TRACEV]))
+    if TRACE: print((" ").join(map(repr, args[0:TRACEV])))
 
 # Decos
 def ccheck(fn):
