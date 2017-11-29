@@ -10,11 +10,13 @@ What we need to do here:
 Qs:
   - What are the flagversions?
   - The FT model in visibility after CLEAN has the absolute coded path???? Can't move MS?
+  - Some default parameters get flipped by CASA semi-randomly? E.g., interp for gaincal.
 
 """
 
 import inspect, shutil, os
 from hashlib import sha256
+import json
 
 import casa
 
@@ -83,8 +85,10 @@ def h_inplc(fn, args, kwargs):
 
 def hf(fn, *args, **kwargs):
     """Hash a function call, including function name """
-    aa=inspect.getcallargs(fn, *args, **kwargs).items(); aa.sort()
-    return sha256(fn.func_name+repr(aa)).hexdigest()
+    aa=json.dumps(inspect.getcallargs(fn, *args, **kwargs),
+                  sort_keys=True)
+    #"for hash: " , fn.func_name+aa
+    return sha256(fn.func_name+aa).hexdigest()
 
 @ccheck
 def ft(*args, **kwargs):
