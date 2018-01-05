@@ -53,7 +53,8 @@ def h_simpo(fn, args, kwargs):
     opars= {"split" : "outputvis",
             "gaincal" : "caltable",
             "importuvfits": "vis",
-            "fixvis" : "outputvis"}
+            "fixvis" : "outputvis",
+            "plotms" : "plotfile"}
     opar=opars[fn.__name__]
 
     aa=inspect.getcallargs(fn, *args, **kwargs)
@@ -153,7 +154,9 @@ def clean(*args, **kwargs):
     fn(**aa)
     return f    
     
-    
+@ccheck
+def plotms(*args, **kwargs):
+    return h_simpo(casa.plotms, args, kwargs)
     
 
 
