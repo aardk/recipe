@@ -52,6 +52,7 @@ def h_simpo(fn, args, kwargs):
     """
     opars= {"split" : "outputvis",
             "gaincal" : "caltable",
+            "bandpass" : "caltable",
             "importuvfits": "vis",
             "fixvis" : "outputvis",
             "plotms" : "plotfile"}
@@ -103,7 +104,11 @@ def ft(*args, **kwargs):
 
 @ccheck
 def gaincal(*args, **kwargs):
-    return h_simpo(casa.gaincal, args, kwargs)    
+    return h_simpo(casa.gaincal, args, kwargs)
+
+@ccheck
+def bandpass(*args, **kwargs):
+    return h_simpo(casa.bandpass, args, kwargs)
 
 @ccheck
 def applycal(*args, **kwargs):

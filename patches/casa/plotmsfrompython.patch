@@ -1,0 +1,38 @@
+--- /data/p/casa-release-5.1.0-74.el7/lib/python2.7/task_plotms.py.orig	2017-09-23 09:01:33.000000000 +0100
++++ /data/p/casa-release-5.1.0-74.el7/lib/python2.7/task_plotms.py	2017-12-13 12:42:02.670687878 +0000
+@@ -301,7 +301,7 @@
+        
+         # start plotms with the procmgr, use logfile
+         myframe = stack_frame_find()
+-        if myframe['casa']['state']['init_version'] > 0:
++        if myframe and myframe['casa']['state']['init_version'] > 0:
+             from casa_system import procmgr
+             pmsrun = procmgr.running("plotms")
+             pms = procmgr.fetch("plotms")
+@@ -329,6 +329,18 @@
+                     # connect future calls to this plotms
+                     procpid = procmgr.fetch('plotms').pid
+                     pm.setPlotmsPid(procpid)
++        else:
++            from casa_system import procmgr
++            plotmsApp = 'casaplotms'
++            for dir in os.getenv('PATH').split(':'):
++                dd = dir + os.sep + plotmsApp
++                if os.path.exists(dd) and os.access(dd, os.X_OK):
++                    plotmsApp = dd
++                    break
++            logfile = ""
++            procmgr.create("plotms", [plotmsApp, "--nogui", "--nopopups",
++                                      "--casapy", "--logfilename="+logfile])
++                    
+ 
+         # Determine whether this is going to be a scripting client or 
+         # a full GUI supporting user interaction.  This must be done 
+@@ -758,5 +770,6 @@
+     except Exception, instance:
+         plotUpdated = False
+         print "Exception during plotms task: ", instance
+-        
++
++    procmgr.shutdown()
+     return plotUpdated
