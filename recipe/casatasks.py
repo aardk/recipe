@@ -155,10 +155,13 @@ def clean(*args, **kwargs):
     vis=os.path.join(f, "vis")
     shutil.copytree(aa[iopar],vis)
     aa[iopar]=vis
-    aa[opar]=os.path.join(f, "img")
+    if aa.has_key("phasecenter") and type(aa["phasecenter"])==list and len(aa["phasecenter"]) > 1:
+        aa[opar]=[os.path.join(f, "img%i"% ii) for ii in range(len(aa["phasecenter"]))]
+    else:
+        aa[opar]=os.path.join(f, "img")
     fn(**aa)
-    return f    
-    
+    return f
+
 @ccheck
 def plotms(*args, **kwargs):
     return h_simpo(casa.plotms, args, kwargs)
