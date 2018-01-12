@@ -41,13 +41,13 @@ def ccheck(fn):
             tempf=fn(*args,  **kwargs)
             if not os.path.exists(tempf):
                 raise RuntimeError("No output produced by " + fn.__name__  + "!")
-            return repo.put(tempf, hh)    
+            return repo.put(tempf, hh)
     return newfn
 
 # Handlers
 def h_simpo(fn, args, kwargs):
-    """Simple output task 
-    
+    """Simple output task
+
     All output goes into a single file/dir that is specified
     """
     opars= {"split" : "outputvis",
@@ -72,8 +72,8 @@ def h_inplc(fn, args, kwargs):
 
     """
     opars= {"flagdata" : "vis",
-            "ft", "vis",
-            "applycal":, "vis"}
+            "ft": "vis",
+            "applycal": "vis"}
     iopar=opars[fn.__name__]
 
     aa=inspect.getcallargs(fn, *args, **kwargs)
@@ -155,6 +155,3 @@ def clean(*args, **kwargs):
 @ccheck
 def plotms(*args, **kwargs):
     return h_simpo(casa.plotms, args, kwargs)
-    
-
-
