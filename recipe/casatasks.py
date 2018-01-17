@@ -41,13 +41,13 @@ def ccheck(fn):
             tempf=fn(*args,  **kwargs)
             if not os.path.exists(tempf):
                 raise RuntimeError("No output produced by " + fn.__name__  + "!")
-            return repo.put(tempf, hh)    
+            return repo.put(tempf, hh)
     return newfn
 
 # Handlers
 def h_simpo(fn, args, kwargs):
-    """Simple output task 
-    
+    """Simple output task
+
     All output goes into a single file/dir that is specified
     """
     opars= {"split" : "outputvis",
@@ -71,7 +71,9 @@ def h_inplc(fn, args, kwargs):
     """A task that in-place modifies an input
 
     """
-    opars= {"flagdata" : "vis"}
+    opars= {"flagdata" : "vis",
+            "ft": "vis",
+            "applycal": "vis"}
     iopar=opars[fn.__name__]
 
     aa=inspect.getcallargs(fn, *args, **kwargs)
@@ -94,13 +96,7 @@ def hf(fn, *args, **kwargs):
 
 @ccheck
 def ft(*args, **kwargs):
-    aa=inspect.getcallargs(casa.ft, *args, **kwargs)
-    f=repo.mktemp()
-    os.remove(f)
-    shutil.copytree(aa['vis'], f)
-    aa['vis']=f
-    casa.ft(**aa)
-    return f
+    return h_inplc(casa.ft, args, kwargs)
 
 @ccheck
 def gaincal(*args, **kwargs):
@@ -112,13 +108,7 @@ def bandpass(*args, **kwargs):
 
 @ccheck
 def applycal(*args, **kwargs):
-    aa=inspect.getcallargs(casa.applycal, *args, **kwargs)
-    f=repo.mktemp()
-    os.remove(f)
-    shutil.copytree(aa['vis'], f)
-    aa['vis']=f
-    casa.applycal(**aa)
-    return f
+    return h_inplc(casa.applycal, args, kwargs)
 
 @ccheck
 def split(*args, **kwargs):
@@ -165,6 +155,3 @@ def clean(*args, **kwargs):
 @ccheck
 def plotms(*args, **kwargs):
     return h_simpo(casa.plotms, args, kwargs)
-    
-
-
