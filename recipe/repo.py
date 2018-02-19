@@ -35,10 +35,9 @@ def atouch(f):
     os.utime(f, None)
 
 def df(f):
-    "Returns number of free blocks"
-    x=subprocess.check_output(["df", "--output=avail", str(f)]).split()
-    # Output on second line
-    return int(x[1])
+    "Returns number of free bytes"
+    f = os.statvfs(str(f))
+    return f.f_bavail * f.f_bsize
 
 def evict_m(d):
     """If not enough free space, evict"""
