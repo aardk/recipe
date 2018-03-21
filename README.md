@@ -14,6 +14,13 @@ export CASADIR=/home/user/p/casa-release-5.1.0-74.el7/
 wget https://bootstrap.pypa.io/get-pip.py
 ${CASADIR:? must be set}/bin/python get-pip.py
 ${CASADIR}/bin/pip2.7 install --upgrade setuptools
+```
+Then either install from GitHub
+```
+${CASADIR:? must be set}/bin/pip install git+https://github.com/bnikolic/recipe.git
+```
+OR install from internet
+```
 ${CASADIR:? must be set}/bin/pip install --extra-index-url=https://www.mrao.cam.ac.uk/~bn204/soft/py recipe
 ```
 
