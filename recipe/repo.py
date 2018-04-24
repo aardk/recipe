@@ -59,6 +59,7 @@ def get(h):
         return False
 
 def mktemp():
+    "Make a temporary file, close the fd"
     fd,n=tempfile.mkstemp(prefix="recipetmp", dir=REPODIR)
     os.close(fd)
     return n
