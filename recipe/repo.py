@@ -9,7 +9,10 @@ import tempfile
 import subprocess
 import shutil
 
-REPODIR="/home/user/temp/casa/repo/"
+#REPODIR="/home/user/temp/casa/repo/"
+REPODIR = os.path.expanduser('~') + '/casa/repo/'
+if not os.path.exists(REPODIR):
+  os.makedirs(REPODIR)
 
 # Default is 20GB
 EVLIM=20 * (1<<20)
