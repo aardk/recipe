@@ -88,6 +88,8 @@ def h_simpo(fn, args, kwargs):
     aa=inspect.getcallargs(fn, *args, **kwargs)
     if aa.has_key(opar) and aa[opar] != "" :
         print "Warning: can not supply the output; will be ignored"
+    if (fn.__name__ == 'plotms') and (aa['expformat'] == ''):
+        aa['expformat'] = 'png'
     f=repo.mktemp()
     # Remove the temporary *file*, but reuse the *filename*.  Do this
     # because CASA won't overwrite and/or needs a directory instead of
