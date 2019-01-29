@@ -1,4 +1,5 @@
 # Bojan Nikolic <b.nikolic@mrao.cam.ac.uk> 2017
+# Aard Keimpema (2019): Call signature of wrapped tasks are now preserved
 """
 Hand-wrapped tasks for CASA
 
@@ -44,6 +45,29 @@ def ccheck(fn):
             return repo.put(tempf, hh)
     return newfn
 
+class wrap_casa(object):
+  def __init__(self, casatask):
+    self.name = casatask.__name__
+    self.doc = casatask.__doc__
+    self.argspec = inspect.getargspec(casatask)
+
+  def __call__(self, task):
+    sp = self.argspec
+    narg = len(sp[0])
+    ndef = len(sp[3])
+    n = narg - ndef # parameters without defaults
+    addquotes = lambda x: "'%s'"%(x,) if type(x) == str else x
+    argdef = ','.join(sp[0][:n] + ["{}={}".format(sp[0][n+i], addquotes(sp[3][i])) for i in range(ndef)])
+    func_def = 'def {name}({argdef}):\n  return task({args})'.format(name = self.name, argdef = argdef, args=','.join(sp[0]))
+    print '\n', func_def
+    func_ns = {'task': task}
+    exec func_def in func_ns
+    wrapped_task = func_ns[self.name]
+    wrapped_task.__doc__ = self.doc
+    wrapped_task.__dict__ = task.__dict__
+    wrapped_task.__module__ = task.__module__
+    return wrapped_task
+
 # Handlers
 def h_simpo(fn, args, kwargs):
     """Simple output task
@@ -71,6 +95,7 @@ def h_simpo(fn, args, kwargs):
     os.remove(f)
     aa[opar]=f
     fn(**aa)
+
     return f
 
 def h_inplc(fn, args, kwargs):
@@ -100,52 +125,64 @@ def hf(fn, *args, **kwargs):
     #"for hash: " , fn.func_name+aa
     return sha256(fn.func_name+aa).hexdigest()
 
+@wrap_casa(casa.ft)
 @ccheck
 def ft(*args, **kwargs):
     return h_inplc(casa.ft, args, kwargs)
 
+@wrap_casa(casa.gaincal)
 @ccheck
 def gaincal(*args, **kwargs):
     return h_simpo(casa.gaincal, args, kwargs)
 
+@wrap_casa(casa.gencal)
 @ccheck
 def gencal(*args, **kwargs):
     return h_simpo(casa.gencal, args, kwargs)
 
+@wrap_casa(casa.bandpass)
 @ccheck
 def bandpass(*args, **kwargs):
     return h_simpo(casa.bandpass, args, kwargs)
 
+@wrap_casa(casa.fringefit)
 @ccheck
 def fringefit(*args, **kwargs):
     return h_simpo(casa.fringefit, args, kwargs)
 
+@wrap_casa(casa.applycal)
 @ccheck
 def applycal(*args, **kwargs):
     return h_inplc(casa.applycal, args, kwargs)
 
+@wrap_casa(casa.split)
 @ccheck
 def split(*args, **kwargs):
     return h_simpo(casa.split, args, kwargs)
 
+@wrap_casa(casa.importuvfits)
 @ccheck
 def importuvfits(*args, **kwargs):
     return h_simpo(casa.importuvfits, args, kwargs)
 
+@wrap_casa(casa.importfitsidi)
 @ccheck
 def importfitsidi(*args, **kwargs):
     return h_simpo(casa.importfitsidi, args, kwargs)
 
+@wrap_casa(casa.fixvis)
 @ccheck
 def fixvis(*args, **kwargs):
     # Note fixvis won't modify input if output is given, so we use it
     # in that mode
     return h_simpo(casa.fixvis, args, kwargs)
 
+@wrap_casa(casa.flagdata)
 @ccheck
 def flagdata(*args, **kwargs):
     return h_inplc(casa.flagdata, args, kwargs)
 
+@wrap_casa(casa.clean)
 @ccheck
 def clean(*args, **kwargs):
     """Clean task
@@ -170,6 +207,7 @@ def clean(*args, **kwargs):
     fn(**aa)
     return f
 
+@wrap_casa(casa.plotms)
 @ccheck
 def plotms(*args, **kwargs):
     return h_simpo(casa.plotms, args, kwargs)
