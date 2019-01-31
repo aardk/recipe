@@ -83,6 +83,7 @@ def h_simpo(fn, args, kwargs):
             "importfitsidi": "vis",
             "fixvis" : "outputvis",
             "plotms" : "plotfile",
+            "fluxscale" : "fluxtable",
             "concat" : "concatvis"}
     opar=opars[fn.__name__]
 
@@ -230,3 +231,8 @@ def concat(*args, **kwargs):
 @ccheck
 def setjy(*args, **kwargs):
     return h_inplc(casa.setjy, args, kwargs)
+
+@wrap_casa(casa.fluxscale)
+@ccheck
+def fluxscale(*args, **kwargs):
+    return h_simpo(casa.fluxscale, args, kwargs)
