@@ -82,7 +82,8 @@ def h_simpo(fn, args, kwargs):
             "importuvfits": "vis",
             "importfitsidi": "vis",
             "fixvis" : "outputvis",
-            "plotms" : "plotfile"}
+            "plotms" : "plotfile",
+            "concat" : "concatvis"}
     opar=opars[fn.__name__]
 
     aa=inspect.getcallargs(fn, *args, **kwargs)
@@ -213,3 +214,8 @@ def clean(*args, **kwargs):
 @ccheck
 def plotms(*args, **kwargs):
     return h_simpo(casa.plotms, args, kwargs)
+
+@wrap_casa(casa.concat)
+@ccheck
+def concat(*args, **kwargs):
+    return h_simpo(casa.concat, args, kwargs)
