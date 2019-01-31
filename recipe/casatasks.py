@@ -107,6 +107,7 @@ def h_inplc(fn, args, kwargs):
     """
     opars= {"flagdata" : "vis",
             "ft": "vis",
+            "setjy": "vis",
             "gaincal" : "caltable",
             "applycal": "vis"}
     iopar=opars[fn.__name__]
@@ -224,3 +225,8 @@ def plotms(*args, **kwargs):
 @ccheck
 def concat(*args, **kwargs):
     return h_simpo(casa.concat, args, kwargs)
+
+@wrap_casa(casa.setjy)
+@ccheck
+def setjy(*args, **kwargs):
+    return h_inplc(casa.setjy, args, kwargs)
