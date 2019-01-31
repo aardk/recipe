@@ -107,6 +107,7 @@ def h_inplc(fn, args, kwargs):
     """
     opars= {"flagdata" : "vis",
             "ft": "vis",
+            "gaincal" : "caltable",
             "applycal": "vis"}
     iopar=opars[fn.__name__]
 
@@ -136,7 +137,11 @@ def ft(*args, **kwargs):
 @wrap_casa(casa.gaincal)
 @ccheck
 def gaincal(*args, **kwargs):
-    return h_simpo(casa.gaincal, args, kwargs)
+    aa=inspect.getcallargs(casa.gaincal, *args, **kwargs)
+    if aa['append'] and os.path.isdir(aa['caltable']):
+        return h_inplc(casa.gaincal, args, kwargs)
+    else:
+        return h_simpo(casa.gaincal, args, kwargs)
 
 @wrap_casa(casa.gencal)
 @ccheck
