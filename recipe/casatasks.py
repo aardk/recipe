@@ -59,7 +59,6 @@ class wrap_casa(object):
     addquotes = lambda x: "'%s'"%(x,) if type(x) == str else x
     argdef = ','.join(sp[0][:n] + ["{}={}".format(sp[0][n+i], addquotes(sp[3][i])) for i in range(ndef)])
     func_def = 'def {name}({argdef}):\n  return task({args})'.format(name = self.name, argdef = argdef, args=','.join(sp[0]))
-    print '\n', func_def
     func_ns = {'task': task}
     exec func_def in func_ns
     wrapped_task = func_ns[self.name]
@@ -126,8 +125,20 @@ def h_inplc(fn, args, kwargs):
 
 def hf(fn, *args, **kwargs):
     """Hash a function call, including function name """
-    aa=json.dumps(inspect.getcallargs(fn, *args, **kwargs),
-                  sort_keys=True)
+    # A number of tasks take the "interp" parameter, unfortunately, the
+    # the default value for "interp" changes between runs. So running the
+    # same task twice with the same arguments will not always produce the 
+    # same hash! The default value for 'interp' will be either [""] or 
+    # ["linear"], which are actually equivalent. As a work around we just
+    # set interp to linear when it is not set.
+    callargs = inspect.getcallargs(fn, *args, **kwargs)
+    try:
+        if callargs['interp'] == [""]:
+            callargs['interp'] = ["linear"]
+    except KeyError:
+        pass
+
+    aa=json.dumps(callargs, sort_keys=True)
     #"for hash: " , fn.func_name+aa
     return sha256(fn.func_name+aa).hexdigest()
 
